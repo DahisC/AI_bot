@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Page Title</title>
+
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <div id="searchingMessage">
+        <p>Loading <a href="http://www.ai-tec.com.tw/collections/%E6%89%80%E6%9C%89%E5%95%86%E5%93%81">AI-Tec Website</a> Products ...</p>
+    </div>
+
+    <div id="saveSheetBlock" style="display: none;">
+        <hr>
+        <button id="shopee" class="btn btn-outline-secondary">
+            Shopee
+        </button>
+    </div>
+
+    <script>
+        $(document).ready(() => {
+            $.get('/scraper', res => {
+                console.log(res);
+                $('div#searchingMessage').attr('display', 'none');
+                $('div#saveSheetBlock').attr('display', 'block');
+                productsConstructor(res);
+            });
+        });
+
+        function productsConstructor(products) {
+            console.log(products);
+
+            let massUploadArray = [];
+            let nullItems = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
+            products.map(product => massUploadArray.push([product.name, 1, 2, 3, 4, ...nullItems]));
+            console.log(massUploadArray);
+            prepareShopeeXlsx(massUploadArray);
+        }
+
+        function prepareShopeeXlsx(massUploadArray) {
+            var filename = "write.xlsx";
+
+            const sheetKey = [
+                'ps_category_list_id',
+                'ps_product_name',
+                'ps_product_description',
+                'ps_price',
+                'ps_stock',
+                'ps_product_weight',
+                'ps_days_to_ship',
+                'ps_sku_ref_no_parent',
+                'ps_mass_upload_variation_help',
+                'ps_variation 1 ps_variation_sku',
+                'ps_variation 1 ps_variation_name',
+                'ps_variation 1 ps_variation_price',
+                'ps_variation 1 ps_variation_stock',
+                'ps_variation 2 ps_variation_sku',
+                'ps_variation 2 ps_variation_name',
+                'ps_variation 2 ps_variation_price',
+                'ps_variation 2 ps_variation_stock',
+                'ps_variation 3 ps_variation_sku',
+                'ps_variation 3 ps_variation_name',
+                'ps_variation 3 ps_variation_price',
+                'ps_variation 3 ps_variation_stock',
+                'ps_variation 4 ps_variation_sku',
+                'ps_variation 4 ps_variation_name',
+                'ps_variation 4 ps_variation_price',
+                'ps_variation 4 ps_variation_stock',
+                'ps_variation 5 ps_variation_sku',
+                'ps_variation 5 ps_variation_name',
+                'ps_variation 5 ps_variation_price',
+                'ps_variation 5 ps_variation_stock',
+                'ps_variation 6 ps_variation_sku',
+                'ps_variation 6 ps_variation_name',
+                'ps_variation 6 ps_variation_price',
+                'ps_variation 6 ps_variation_stock',
+                'ps_variation 7 ps_variation_sku',
+                'ps_variation 7 ps_variation_name',
+                'ps_variation 7 ps_variation_price',
+                'ps_variation 7 ps_variation_stock',
+                'ps_variation 8 ps_variation_sku',
+                'ps_variation 8 ps_variation_name',
+                'ps_variation 8 ps_variation_price',
+                'ps_variation 8 ps_variation_stock',
+                'ps_variation 9 ps_variation_sku',
+                'ps_variation 9 ps_variation_name',
+                'ps_variation 9 ps_variation_price',
+                'ps_variation 9 ps_variation_stock',
+                'ps_variation 10 ps_variation_sku',
+                'ps_variation 10 ps_variation_name',
+                'ps_variation 10 ps_variation_price',
+                'ps_variation 10 ps_variation_stock',
+                'ps_variation 11 ps_variation_sku',
+                'ps_variation 11 ps_variation_name',
+                'ps_variation 11 ps_variation_price',
+                'ps_variation 11 ps_variation_stock',
+                'ps_variation 12 ps_variation_sku',
+                'ps_variation 12 ps_variation_name',
+                'ps_variation 12 ps_variation_price',
+                'ps_variation 12 ps_variation_stock',
+                'ps_variation 13 ps_variation_sku',
+                'ps_variation 13 ps_variation_name',
+                'ps_variation 13 ps_variation_price',
+                'ps_variation 13 ps_variation_stock',
+                'ps_variation 14 ps_variation_sku',
+                'ps_variation 14 ps_variation_name',
+                'ps_variation 14 ps_variation_price',
+                'ps_variation 14 ps_variation_stock',
+                'ps_variation 15 ps_variation_sku',
+                'ps_variation 15 ps_variation_name',
+                'ps_variation 15 ps_variation_price',
+                'ps_variation 15 ps_variation_stock',
+                'ps_variation 16 ps_variation_sku',
+                'ps_variation 16 ps_variation_name',
+                'ps_variation 16 ps_variation_price',
+                'ps_variation 16 ps_variation_stock',
+                'ps_variation 17 ps_variation_sku',
+                'ps_variation 17 ps_variation_name',
+                'ps_variation 17 ps_variation_price',
+                'ps_variation 17 ps_variation_stock',
+                'ps_variation 18 ps_variation_sku',
+                'ps_variation 18 ps_variation_name',
+                'ps_variation 18 ps_variation_price',
+                'ps_variation 18 ps_variation_stock',
+                'ps_variation 19 ps_variation_sku',
+                'ps_variation 19 ps_variation_name',
+                'ps_variation 19 ps_variation_price',
+                'ps_variation 19 ps_variation_stock',
+                'ps_variation 20 ps_variation_sku',
+                'ps_variation 20 ps_variation_name',
+                'ps_variation 20 ps_variation_price',
+                'ps_variation 20 ps_variation_stock',
+                'ps_img_1',
+                'ps_img_2',
+                'ps_img_3',
+                'ps_img_4',
+                'ps_img_5',
+                'ps_img_6',
+                'ps_img_7',
+                'ps_img_8',
+                'ps_img_9',
+                'ps_mass_upload_shipment_help',
+                'channel 30001 switch',
+                'channel 30001 value',
+                'channel 30005 switch',
+                'channel 30006 switch',
+                'channel 39303 switch',
+                'channel 39303 value',
+                'channel 39304 switch',
+                'channel 39304 value',
+            ];
+
+            var data = [sheetKey, ...massUploadArray];
+            console.log(data);
+            var ws_name = "SheetJS";
+            var wb = XLSX.utils.book_new(), ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, ws_name);
+            XLSX.writeFile(wb, filename);
+        }
+    </script>
+
+</body>
+</html>
