@@ -16,23 +16,28 @@ function scraper(callback) {
             method: 'GET',
         }, (e, r, b) => {
             const $ = cheerio.load(b);
-            const products = $('.products-content .product-col');
+            const products = $('section.products-content .row > div .product-col');
 
-            for (let i = 0; i < products.length; i += 1) {
-                const name = products[i].children[3].children[1].children[0].children[0].data;
-                // const name = products[i].children[1].children[1].attribs.title;
-                console.log(name);
+            products.each((index, product) => {
+                const eImg = $(product).find('div.image');
+                let URL;
+                URL = `http://www.ai-tec.com.tw${eImg[0].children[1].attribs.href}`;
+                let NAME;
+                NAME = eImg[0].children[1].attribs.title;
+                console.log(`URL: ${URL}`);
+                console.log(`NAME: ${NAME}`);
+                let IMG;
+                IMG = `http:${eImg[0].children[1].children[0].attribs.src}`;
+                console.log(IMG);
 
-                const product = new Product(name);
-                productArray.push(product);
-            }
+            });
 
             if (products.length === 16) {
                 console.log(productArray.length);
                 console.log(`目前頁數：${searchPage} - 準備搜尋下一頁。`);
                 searchPage += 1;
-                // aitecWebsite();
-                callback(productArray);
+                aitecWebsite();
+                // callback(productArray);
             } else {
                 console.log(`目前頁數：${searchPage} - 搜尋完成。`);
                 console.log(productArray.length);
