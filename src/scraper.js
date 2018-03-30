@@ -6,8 +6,10 @@ function scraper(callback) {
     let searchPage = 1;
 
     let productArray = [];
-    function Product(name) {
+    function Product(url, name, img) {
+        this.url = url;
         this.name = name;
+        this.img = img;
     }
 
     function aitecWebsite() {
@@ -19,25 +21,25 @@ function scraper(callback) {
             const products = $('section.products-content .row > div .product-col');
 
             products.each((index, product) => {
-                const eImg = $(product).find('div.image');
-                let URL;
-                URL = `http://www.ai-tec.com.tw${eImg[0].children[1].attribs.href}`;
-                let NAME;
-                NAME = eImg[0].children[1].attribs.title;
-                console.log(`URL: ${URL}`);
-                console.log(`NAME: ${NAME}`);
-                let IMG;
-                IMG = `http:${eImg[0].children[1].children[0].attribs.src}`;
-                console.log(IMG);
+                const eURL = $(product).find('div.image a');
+                const URL = `http://www.ai-tec.com.tw${eURL[0].attribs.href}`;
 
+                const eName = $(product).find('div.image a');
+                const NAME = eName[0].attribs.title;
+
+                const eIMG = $(product).find('div.image img');
+                const IMG = `http:${eIMG[0].attribs.src}`;
+                // console.log(IMG);
+
+                productArray.push(new Product(URL, NAME, IMG));
             });
 
             if (products.length === 16) {
                 console.log(productArray.length);
                 console.log(`目前頁數：${searchPage} - 準備搜尋下一頁。`);
                 searchPage += 1;
-                aitecWebsite();
-                // callback(productArray);
+                //aitecWebsite();
+                callback(productArray);
             } else {
                 console.log(`目前頁數：${searchPage} - 搜尋完成。`);
                 console.log(productArray.length);

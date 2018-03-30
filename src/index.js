@@ -12,9 +12,7 @@ app.get('/', (req, res) => {
 
 app.get('/scraper', (req, res) => {
     scraper((products) => {
-        // res.send(products);
-        // res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.write('123213213');
+        res.send(products);
     });
 });
 
