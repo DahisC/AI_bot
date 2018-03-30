@@ -179,7 +179,12 @@
             // 表格區域
             $('#tableArea').css('height', '69vh');
             setTimeout(() => {
-                let endTime = ` ( ${(Math.abs(startM - new Date().getMinutes()) * 60) + (Math.abs(startS - new Date().getSeconds()))}.${Math.abs(startMs - new Date().getMilliseconds())} seconds )`;
+                const endM = new Date().getMinutes();
+                (endM === 0) ? endM = 60 : endM = endM;
+                const endS = new Date().getSeconds();
+                (endS === 0) ? endS = 60 : endS = endS;
+
+                let endTime = ` ( ${(Math.abs(startM - endM) * 60) + (Math.abs(startS - endS))}.${Math.abs(startMs - new Date().getMilliseconds())} seconds )`;
 
                 $('#searchMsg').append(`<span style="color: #24A647">${endTime}</span>`);
                 $('#tableArea').show();
