@@ -42,7 +42,16 @@
 
         .loader {
             border: 3px solid #f3f3f3; /* Light grey */
-            border-top: 3px solid #24A647; /* Blue */
+            border-top: 3px solid #24A647;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            animation: spin 2s linear infinite;
+        }
+
+        .ssLoader {
+            border: 3px solid #f3f3f3; /* Light grey */
+            border-top: 3px solid #F08080;
             border-radius: 50%;
             width: 25px;
             height: 25px;
@@ -78,11 +87,19 @@
             border-left: 10px solid #F08080;
         }
 
-        #ssBtn {
+        #ssArea {
             position: fixed;
             bottom: 10px;
             right: 10px;
             margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #shopeeLoading {
+            margin: 10px;
         }
 
         /* #tableArea > div {
@@ -131,15 +148,18 @@
         </div>
     </div>
 
-    <button type="button" id="ssBtn" class="btn btn-outline-danger" onclick="getSelectedProduct()">
-        Produce Shopee Spreadsheet
-    </button>
+    <div id="ssArea">
+        <div id="shopeeLoading"></div>
+        <button type="button" class="btn btn-outline-danger" onclick="getSelectedProduct()">
+            Produce Shopee Spreadsheet
+        </button>
+    </div>
 
     <script>
         $(document).ready(() => {
             // 表格區域
             $('#tableArea').hide();
-            $('#ssBtn').hide();
+            $('#ssArea').hide();
         });
         let startM;
         let startS;
@@ -191,30 +211,55 @@
                 products.forEach((product, index) => {
                     const tableImg = `<img src="${product.img}" style="height: 50px; width: 50px; display:inline-block; "/>`;
                     const tableUrl = `<a href="${product.url}" target="_blank"><img src="https://i.imgur.com/dDPmSYR.png" style="width: 20px; height: 20px;" /></a>`;
-                    $('#pWrite').append(`<tr id="${index}" onclick="pSelected(this)"><td>${tableImg}</td><td>${product.name}</td><td>${tableUrl}</td></tr>`)
+                    $('#pWrite').append(`<tr onclick="pSelected(this)"><td>${tableImg}</td><td>${product.name}</td><td>${tableUrl}</td></tr>`)
                 });
             }, 2000)
         }
 
         let _singleSearchArray = [];
+        let _selectedArray = [];
         function pSelected(event) {
             if (!$(event).hasClass('selected')) {
+                // 將選定的商品名稱插入選擇陣列中
+                _selectedArray.push($(event).text());
                 $(event).toggleClass('selected');
             } else {
+                // 過濾出點擊刪除的商品，從陣列中回傳所有非此次點擊商品的商品名稱並修改原陣列
+                _selectedArray = _selectedArray.filter((selectedP) => {
+                    return selectedP !== $(event).text();
+                });
                 $(event).toggleClass('selected');
             }
-            
+
             // 此處可判斷所有 tr 元素中是否皆包含 selected，以控制表單按鈕顯示
             if ($('tr').hasClass('selected')) {
-                $('#ssBtn').show();
+                $('#ssArea').show();
             // 如果都沒被選擇，執行這段程式碼
             } else {
-                $('#ssBtn').hide();
+                $('#ssArea').hide();
             }
         }
 
         function getSelectedProduct() {
-            console.log("===");
+            let scrapingArray = [];
+            _products.forEach(product => {
+                _selectedArray.forEach(selectedP => {
+                    if (selectedP === product.name) {
+                        scrapingArray.push(product);
+                    }
+                });
+            });
+
+            $('#shopeeLoading').addClass('ssLoader');
+            $.ajax({
+                url: '/singleScraper',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ payload: scrapingArray }),
+                success: res => {
+                    console.log(res);
+                }
+            })
         }
     </script>
 
