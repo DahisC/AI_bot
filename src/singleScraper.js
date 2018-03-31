@@ -2,7 +2,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 
 function singleScraper(products, callback) {
-    let productArray = [];
+    let productArray = products;
 
     function Product(url, name, img) {
         this.url = url;
@@ -11,10 +11,10 @@ function singleScraper(products, callback) {
     }
 
     function aitecProduct(index) {
-        const i = index;
+        let i = index;
 
         request({
-            url: products[i].url,
+            url: productArray[i].url,
             method: 'GET',
         }, (e, r, b) => {
             const $ = cheerio.load(b);
@@ -26,9 +26,22 @@ function singleScraper(products, callback) {
             });
 
             const ePrice = $('#recommanded-price');
-            const PRICE = ePrice[0].children[0].data.trim();
-            console.log(PRICE);
+            let PRICE = ePrice[0].children[0].data.trim();
+            PRICE = /\d.*/.exec(PRICE);
 
+            productArray[i].img = IMG;
+            // productArray[i].price = PRICE[0]; // error: eslint: prefer destructuring 使用解構賦值
+            [productArray[i].price] = PRICE; // 修正後
+
+            console.log(productArray[i]);
+
+            if ((i + 1) !== productArray.length) {
+                i += 1;
+                aitecProduct(i);
+            } else {
+                console.log(productArray);
+                callback(productArray);
+            }
         });
     }
 

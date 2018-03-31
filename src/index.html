@@ -108,10 +108,6 @@
             justify-content: center;
         } */
 
-        thead {
-            color: #0F7BFD;
-        }
-
     </style>
 </head>
 <body>
@@ -137,7 +133,7 @@
                         <tr>
                             <th scope="col">Image</th>
                             <th scope="col">Product Name</th>
-                            <th scope="col">Url</th>
+                            <th scope="col">URL</th>
                         </tr>
                     </thead>
                     <tbody id="pWrite">
@@ -190,8 +186,8 @@
             $('#btnArea').css('height', '30vh');
 
             // 搜尋按鈕
-            $('#searchBtn').removeClass('btn-outline-success').addClass('btn-outline-primary');
-            $('#searchBtn').html('DONE');
+            $('#searchBtn').removeClass('btn-outline-success').addClass('btn-outline-success');
+            $('#searchBtn').html('Loading');
 
             // $ 搜尋訊息
             $('#searchMsg').text(`${products.length} products`).css('border-top', '5px double #0F7BFD');
@@ -199,6 +195,10 @@
             // 表格區域
             $('#tableArea').css('height', '69vh');
             setTimeout(() => {
+                // 搜尋按鈕
+                $('#searchBtn').removeClass('btn-outline-success').addClass('btn-outline-primary');
+                $('#searchBtn').html('Done');
+
                 let endM = new Date().getMinutes();
                 (endM === 0) ? endM = 60 : endM = endM;
                 let endS = new Date().getSeconds();
@@ -257,7 +257,9 @@
                 contentType: 'application/json',
                 data: JSON.stringify({ payload: scrapingArray }),
                 success: res => {
-                    console.log(res);
+                    $('#shopeeLoading').removeClass('ssLoader');
+                    // console.log(res);
+                    productsConstructor(res);
                 }
             })
         }
@@ -266,17 +268,15 @@
     <script>
 
         function productsConstructor(products) {
-            console.log(products);
-
             let massUploadArray = [];
             let nullItems = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
-            products.map(product => massUploadArray.push([product.name, 1, 2, 3, 4, ...nullItems]));
-            console.log(massUploadArray);
+            products.forEach(p => massUploadArray.push([null, p.name, null, p.price, 1000, 1, 7/*days to ship*/, ...nullItems, ...p.img]));
+            // console.log(massUploadArray);
             prepareShopeeXlsx(massUploadArray);
         }
 
         function prepareShopeeXlsx(massUploadArray) {
-            var filename = "write.xlsx";
+            const filename = `AiTec@ShopeeMassUpload-${new Date().getMonth() + new Date().getDay()}.xlsx`;
 
             const sheetKey = [
                 'ps_category_list_id',
