@@ -38,8 +38,8 @@ function scraper(callback) {
                 console.log(productArray.length);
                 console.log(`目前頁數：${searchPage} - 準備搜尋下一頁。`);
                 searchPage += 1;
-                // aitecWebsite();
-                callback(productArray);
+                aitecWebsite();
+                // callback(productArray);
             } else {
                 console.log(`目前頁數：${searchPage} - 搜尋完成。`);
                 console.log(productArray.length);
