@@ -270,7 +270,8 @@
         function productsConstructor(products) {
             let massUploadArray = [];
             let nullItems = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,];
-            products.forEach(p => massUploadArray.push([null, p.name, null, p.price, 1000, 1, 7/*days to ship*/, ...nullItems, ...p.img]));
+            const shopeeContent = "歡迎來到 Ai-Tec 智瑞科技\n\n因為品項眾多，無法即時更新庫存狀態，煩請下標前先詢問是否有現貨喔！\n\n\n本店售出物品，除非特價品或二手品，均附 3 個月保固\n\n期間有非人為損壞，將更換良品或免費維修。超出期限或人為損壞，則酌收運費、維修費與處理費。\n\n參考更多本店商品：#aitec\n\n歡迎 FB 搜尋「 Ai Tec 」，關注粉絲團！\n\n\n商品特性：\n\n";
+            products.forEach(p => massUploadArray.push([null, p.name, shopeeContent, p.price, 1000, 1, 7/*days to ship*/, ...nullItems, ...p.img]));
             // console.log(massUploadArray);
             prepareShopeeXlsx(massUploadArray);
         }
